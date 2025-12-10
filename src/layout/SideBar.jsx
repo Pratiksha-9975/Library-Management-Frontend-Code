@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import logo_with_title from "../assets/logo-with-title.png";
 import logoutIcon from "../assets/logout.png";
 import closeIcon from "../assets/white-close-icon.png";
@@ -8,17 +8,23 @@ import catalogIcon from "../assets/catalog.png";
 import settingIcon from "../assets/setting-white.png";
 import usersIcon from "../assets/people.png";
 import { RiAdminFill } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, resetAuthSlice } from "../store/slices/authSlice";
+import { toast } from "react-toastify";
+import { toggleAddNewAdminPopup } from "../store/slices/popUpSlice";
+import AddNewAdmin from "../popups/AddNewAdmin";
 
 const SideBar = ({ isSideBarOpen, setIsSideBarOpen, setSelectedComponent }) => {
   const dispatch = useDispatch();
-  const { addNewAdminPopup } = useSelector((state) => state.popup);
 
-  const { loading, error, message, isAuthenticated, user } = useSelector(
+  const {addNewAdminPopup} = useSelector((state)=> state.popup);
+
+  const { loading, error, message, user, isAuthenticated } = useSelector(
     (state) => state.auth
   );
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logout); 
   };
 
   useEffect(() => {
@@ -37,80 +43,100 @@ const SideBar = ({ isSideBarOpen, setIsSideBarOpen, setSelectedComponent }) => {
       <aside
         className={`${
           isSideBarOpen ? "left-0" : "-left-full"
-        } z-10 transition-all duration-700 md:relative md:left-0 flex w-64 bg-black text-white flex-col h-full`}
+        } fixed top-0 h-full w-64 bg-[#0D0F17] text-white z-30 
+           transition-all duration-700 md:relative md:left-0 flex flex-col shadow-xl`}
         style={{ position: "fixed" }}
       >
-        <div className="px-6 py-4 my-8">
-          <img src={logo_with_title} alt="logo" />
+        
+        <div className="flex justify-between items-center px-6 py-6 border-b border-gray-800">
+          <img src={logo_with_title} alt="logo" className="w-40" />
+
+          <button className="md:hidden" onClick={() => setIsSideBarOpen(false)}>
+            <img src={closeIcon} alt="close" className="w-6" />
+          </button>
         </div>
-        <nav className="flex-1 px-6 space-y-2">
+
+      
+        <nav className="flex flex-col gap-3 px-6 py-6">
+        
           <button
             onClick={() => setSelectedComponent("Dashboard")}
-            className="w-full py-2 font-medium bg-transparent rounded-md hover:cursor-pointer flex items-center space-x-2"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-gray-800/50 transition"
           >
-            <img src={dashboardIcon} alt="dashboard" /> <span>Dashboard</span>
+            <img src={dashboardIcon} alt="dashboard" className="w-5" />
+            <span className="text-sm font-medium">Dashboard</span>
           </button>
+
           <button
-            onClick={() => setSelectedComponent("Books")}
-            className="w-full py-2 font-medium bg-transparent rounded-md hover:cursor-pointer flex items-center space-x-2"
-          >
-            <img src={bookIcon} alt="books" /> <span>Books</span>
-          </button>
-          {isAuthenticated && user?.role === "Admin" && (
-            <>
-              <button
-                onClick={() => setSelectedComponent("Catalog")}
-                className="w-full py-2 font-medium bg-transparent rounded-md hover:cursor-pointer flex items-center space-x-2"
+                onClick={() => setSelectedComponent("Books")}
+                className="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-gray-800/50 transition"
               >
-                <img src={catalogIcon} alt="catalog" /> <span>Catalog</span>
+                <img src={bookIcon} alt="books" className="w-5" />
+                <span className="text-sm font-medium">Books</span>
+              </button>
+
+          
+            <>
+            
+              <button
+                onClick={() => setSelectedComponent("catalog")}
+                className="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-gray-800/50 transition"
+              >
+                <img src={catalogIcon} alt="catalog" className="w-5" />
+                <span className="text-sm font-medium">Catalog</span>
+              </button>
+              <button  className="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-gray-800/50 transition"
+               onClick={()=> dispatch(toggleAddNewAdminPopup())}
+              >
+                <RiAdminFill  />{" "}
+              <span> Add new Admin</span>
               </button>
               <button
                 onClick={() => setSelectedComponent("Users")}
-                className="w-full py-2 font-medium bg-transparent rounded-md hover:cursor-pointer flex items-center space-x-2"
+                className="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-gray-800/50 transition"
               >
-                <img src={usersIcon} alt="users" /> <span>Users</span>
+                <img src={usersIcon} alt="users" className="w-5" />
+                <span className="text-sm font-medium">Users</span>
               </button>
+            </>
+          {/* )} */}
+
+          {isAuthenticated && user?.role === "User" && (
+            <>
               <button
-                onClick={() => dispatch(toggleAddNewAdminPopup())}
-                className="w-full py-2 font-medium bg-transparent rounded-md hover:cursor-pointer flex items-center space-x-2"
+                onClick={() => setSelectedComponent("MyBorrowedBooks")}
+                className="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-gray-800/50 transition"
               >
-                <RiAdminFill className="w-6 h-6" /> <span>Add New Admin</span>
+                <img src={catalogIcon} alt="MyBorrowedBooks" className="w-5" />
+                <span className="text-sm font-medium">Books</span>
               </button>
             </>
           )}
-          {isAuthenticated && user?.role === "User" && (
-            <button
-              onClick={() => setSelectedComponent("My Borrowed Books")}
-              className="w-full py-2 font-medium bg-transparent rounded-md hover:cursor-pointer flex items-center space-x-2"
-            >
-              <img src={catalogIcon} alt="my-borrowed-books" />{" "}
-              <span>My Borrowed Books</span>
-            </button>
-          )}
+
+          
           <button
-            onClick={() => dispatch(toggleSettingPopup())}
-            className="md:hidden w-full py-2 font-medium bg-transparent rounded-md hover:cursor-pointer flex items-center space-x-2"
+            onClick={() => setSelectedComponent("Settings")}
+            className="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-gray-800/50 transition"
           >
-            <img src={settingIcon} alt="setting" />{" "}
-            <span>Update Credentials</span>
+            <img src={settingIcon} alt="settings" className="w-5" />
+            <span className="text-sm font-medium">Settings</span>
           </button>
         </nav>
-        <div className="px-6 py-4">
+
+    
+        <div className="mt-auto px-6 pb-6">
           <button
-            className="py-2 font-medium text-center bg-transparent rounded-md hover:cursor-pointer flex items-center justify-center space-x-5 mb-7 mx-auto w-fit"
             onClick={handleLogout}
+            className="flex items-center gap-4 w-full px-4 py-3 rounded-lg 
+                       bg-red-600/20 hover:bg-red-600/30 transition border border-red-600/30 
+                       text-red-400 font-medium"
           >
-            <img src={logoutIcon} alt="logout" /> <span>Log Out</span>
+            <img src={logoutIcon} alt="logout" className="w-5" />
+            Logout
           </button>
         </div>
-        <img
-          src={closeIcon}
-          alt="closeIcon"
-          onClick={() => setIsSideBarOpen(!isSideBarOpen)}
-          className="h-fit w-fit absolute top-0 right-4 mt-4 block md:hidden"
-        />
       </aside>
-      {addNewAdminPopup && <AddNewAdmin />}
+      {addNewAdminPopup && <AddNewAdmin/>}
     </>
   );
 };
