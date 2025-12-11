@@ -148,7 +148,7 @@ export const resetAuthSlice = () => (dispatch) => {
   dispatch(authSlice.actions.resetAuthSlice());
 };
 
-/* ---------------------- API CALLS ------------------------ */
+
 
 export const register = (data) => async (dispatch) => {
   dispatch(authSlice.actions.registerRequest());
