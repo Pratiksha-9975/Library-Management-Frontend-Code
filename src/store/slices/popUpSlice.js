@@ -59,6 +59,7 @@ export const {
   toggleReadBookPopup,
   toggleRecordBookPopup,
   toggleAddNewAdminPopup,
+  toggleReturnBookPopup,
   closeAllPopups,
 } = popupSlice.actions;
 

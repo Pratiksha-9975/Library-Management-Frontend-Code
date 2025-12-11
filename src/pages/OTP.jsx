@@ -19,7 +19,7 @@ const OTP = () => {
     dispatch(otpVerification(email, otp));
   };
 
-  // Handle Toast + Errors
+  
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -31,7 +31,7 @@ const OTP = () => {
     }
   }, [error, message, isAuthenticated, dispatch]);
 
-  // Redirect after successful OTP verification
+  
   if (isAuthenticated) {
     return <Navigate to="/" />;
   }
@@ -39,7 +39,7 @@ const OTP = () => {
   return (
     <div className="min-h-screen w-full flex bg-gray-100">
 
-      {/* LEFT SECTION */}
+    
       <div className="hidden md:flex flex-col justify-between w-1/2 p-14 relative 
           bg-gradient-to-b from-black via-gray-900 to-black text-white overflow-hidden">
 
