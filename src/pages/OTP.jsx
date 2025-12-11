@@ -4,8 +4,6 @@ import { Navigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { otpVerification, resetAuthSlice } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-
 
 const OTP = () => {
   const { email } = useParams();
@@ -21,43 +19,37 @@ const OTP = () => {
     dispatch(otpVerification(email, otp));
   };
 
+  // Handle Toast + Errors
   useEffect(() => {
-    if (message) toast.success(message);
     if (error) {
       toast.error(error);
       dispatch(resetAuthSlice());
     }
-  }, [dispatch, isAuthenticated, error, loading]);
 
-const navigate = useNavigate();
-  useEffect(() => {
-  if (message) {
-    toast.success(message);
+    if (message && isAuthenticated) {
+      toast.success(message);
+    }
+  }, [error, message, isAuthenticated, dispatch]);
 
-   
-    setTimeout(() => {
-      navigate("/");
-    }, 1200); 
+  // Redirect after successful OTP verification
+  if (isAuthenticated) {
+    return <Navigate to="/" />;
   }
-
-  if (error) {
-    toast.error(error);
-    dispatch(resetAuthSlice());
-  }
-}, [message, error, dispatch, navigate]);
 
   return (
     <div className="min-h-screen w-full flex bg-gray-100">
-      {/* Left Section */}
+
+      {/* LEFT SECTION */}
       <div className="hidden md:flex flex-col justify-between w-1/2 p-14 relative 
           bg-gradient-to-b from-black via-gray-900 to-black text-white overflow-hidden">
 
-      
+       
         <div className="absolute -top-10 -left-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-20 right-0 w-72 h-72 bg-white/5 rounded-full blur-3xl"></div>
         <div className="absolute top-1/2 left-1/2 w-40 h-40 bg-white/5 rounded-full blur-2xl 
             -translate-x-1/2 -translate-y-1/2"></div>
 
+        
         <div className="relative z-10">
           <img
             src={logo_with_title}
@@ -74,6 +66,25 @@ const navigate = useNavigate();
             <br />
             <span className="font-semibold text-white">{email}</span>
           </p>
+
+      
+          <div className="mt-10 flex gap-4">
+            <a
+              href="/login"
+              className="px-5 py-2 rounded-lg bg-white text-black font-semibold hover:bg-gray-200 transition"
+            >
+              Login
+            </a>
+
+            <a
+              href="/register"
+              className="px-5 py-2 rounded-lg border border-white text-white font-semibold 
+              hover:bg-white hover:text-black transition"
+            >
+              Register
+            </a>
+          </div>
+          
         </div>
 
         <p className="relative z-10 text-sm text-gray-400 opacity-80">
@@ -81,9 +92,10 @@ const navigate = useNavigate();
         </p>
       </div>
 
-      {/* Right Section */}
+      {/* RIGHT SECTION */}
       <div className="flex justify-center items-center w-full md:w-1/2 px-6 md:px-16 py-10">
         <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl border border-gray-200">
+          
           <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">
             OTP Verification
           </h1>
@@ -121,7 +133,6 @@ const navigate = useNavigate();
             </button>
           </form>
 
-          
           <p className="text-center mt-5 text-sm text-gray-600">
             Didn't receive OTP?
             <button
@@ -133,6 +144,7 @@ const navigate = useNavigate();
           </p>
         </div>
       </div>
+
     </div>
   );
 };

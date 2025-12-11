@@ -27,15 +27,18 @@ const Register = () => {
     dispatch(register(data));
   };
 
-  useEffect(() => {
-    if (message) {
-      navigateTo(`/otp-verification/${email}`);
-    }
-    if (error) {
-      toast.error(error);
-      dispatch(resetAuthSlice());
-    }
-  }, [dispatch, isAuthenticated, error, loading]);
+useEffect(() => {
+  if (message) {
+    navigateTo(`/otp-verification/${email}`);
+  }
+
+  if (error) {
+    toast.error(error);
+    dispatch(resetAuthSlice());
+  }
+}, [message, error]);
+
+
 
   if (isAuthenticated) {
     return <Navigate to={"/"} />;
