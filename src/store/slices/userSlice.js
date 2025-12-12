@@ -3,6 +3,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { toggleAddNewAdminPopup } from "./popUpSlice";
 
+const API = import.meta.env.VITE_BACKEND_URL;
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -38,7 +40,7 @@ export const fetchAllUsers = () => async (dispatch) => {
   dispatch(userSlice.actions.fetchAllUserRequest());
 
   await axios
-    .get("http://localhost:4000/api/v1/user/all", { withCredentials: true })
+    .get(`${API}/api/v1/user/all`, { withCredentials: true })
     .then((res) => {
 
       console.log("API RESPONSE:", res.data); 
@@ -57,7 +59,7 @@ export const addNewAdmin = (data) => async (dispatch) => {
   dispatch(userSlice.actions.addNewAdminRequest());
 
   await axios
-    .post("http://localhost:4000/api/v1/user/add/new-admin", data, {
+    .post(`${API}/api/v1/user/add/new-admin`, data, {
       withCredentials: true,
       headers: {
         "Content-Type": "multipart/form-data", // FIXED typo

@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const API = import.meta.env.VITE_BACKEND_URL;
+
 const borrowSlice = createSlice({
   name: "borrow",
   initialState: {
@@ -81,7 +83,7 @@ export const fetchUserBorrowedBooks = () => async (dispatch) => {
   dispatch(borrowSlice.actions.fetchUserBorrowedBooksRequest());
 
   await axios
-    .get("http://localhost:4000/api/v1/borrow/my-borrowed-books", {
+    .get(`${API}/api/v1/borrow/my-borrowed-books`, {
       withCredentials: true,
     })
     .then((res) => {
@@ -104,7 +106,7 @@ export const fetchUserBorrowedBooks = () => async (dispatch) => {
 export const fetchAllBorrowedBooks = () => async (dispatch) => {
   dispatch(borrowSlice.actions.fetchAllBorrowedBooksRequest());
   await axios
-    .get("http://localhost:4000/api/v1/borrow/borrowed-books-by-user", {
+    .get(`${API}/api/v1/borrow/borrowed-books-by-user`, {
       withCredentials: true,
     })
     .then((res) => {
@@ -128,7 +130,7 @@ export const recordBorrowBook = ({ email, id }) => async (dispatch) => {
 
   await axios
     .post(
-      `http://localhost:4000/api/v1/borrow/record-borrow-book/${id}`,
+      `${API}/api/v1/borrow/record-borrow-book/${id}`,
       { email },
       {
         withCredentials: true,
@@ -150,7 +152,7 @@ export const returnBook = (email, id) => async (dispatch) => {
   dispatch(borrowSlice.actions.returnBookRequest());
   await axios
     .put(
-      `http://localhost:4000/api/v1/borrow/return-borrowed-book/${id}`,
+      `${API}/api/v1/borrow/return-borrowed-book/${id}`,
       { email },
       {
         withCredentials: true,

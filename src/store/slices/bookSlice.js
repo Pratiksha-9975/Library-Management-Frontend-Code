@@ -3,6 +3,8 @@ import axios from "axios";
 import { toggleAddBookPopup } from "./popUpSlice";
 import { toast } from "react-toastify";
 
+const API = import.meta.env.VITE_BACKEND_URL;
+
 const bookSlice = createSlice({
   name: "book",
   initialState: {
@@ -54,7 +56,7 @@ export const fetchAllBooks = () => async (dispatch) => {
   dispatch(bookSlice.actions.fetchBooksRequest());
 
   await axios
-    .get("http://localhost:4000/api/v1/book/all", { withCredentials: true })
+    .get(`${API}/api/v1/book/all`, { withCredentials: true })
     .then((res) => {
       dispatch(bookSlice.actions.fetchBooksSuccess(res.data.books));
     })
@@ -69,7 +71,7 @@ export const addBook = (data) => async (dispatch) => {
   dispatch(bookSlice.actions.addBookRequest());
 
   await axios
-    .post("http://localhost:4000/api/v1/book/admin/add", data, {
+    .post(`${API}/api/v1/book/admin/add`, data, {
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
