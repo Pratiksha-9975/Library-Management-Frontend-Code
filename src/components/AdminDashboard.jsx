@@ -114,125 +114,80 @@ const AdminDashboard = () => {
     .sort((a, b) => new Date(b.borrowDate) - new Date(a.borrowDate))
     .slice(0, 5);
 
-  return (
-    <div className="p-6 w-full max-w-7xl mx-auto">
+return (
+  <div className="p-6 w-full max-w-7xl mx-auto space-y-10">
 
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
-          <img src={logo} alt="logo" className="w-10" />
-          Admin Dashboard
-        </h1>
+    {/* Header */}
+    <div className="flex flex-col sm:flex-row justify-between gap-6 items-start sm:items-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl shadow-lg">
+      <h1 className="text-3xl font-bold flex items-center gap-3">
+        <img src={logo} alt="logo" className="w-10 bg-white p-1 rounded-lg" />
+        Admin Dashboard
+      </h1>
 
-    
-        <div className="flex items-center gap-3 bg-white p-2 px-4 rounded-xl shadow border">
-          <img
-            src={
-              user?.avatar?.url ||
-              "/default-avatar.png"
-            }
-            alt="avatar"
-            className="w-12 h-12 rounded-full object-cover border shadow"
-          />
-
-          <p className="text-gray-700 text-lg font-medium">
-            Welcome, <span className="text-blue-600">{user?.name}</span>
-          </p>
-        </div>
-      </div>
-
-
-      <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
-    
-        <div className="bg-white shadow-lg rounded-xl p-5 border">
-          <div className="flex items-center gap-4">
-            <img src={usersIcon} className="w-12" />
-            <div>
-              <p className="text-gray-500 text-sm">Users</p>
-              <h2 className="text-2xl font-bold">{totalUser}</h2>
-            </div>
-          </div>
-        </div>
-
-
-        <div className="bg-white shadow-lg rounded-xl p-5 border">
-          <div className="flex items-center gap-4">
-            <img src={adminIcon} className="w-12" />
-            <div>
-              <p className="text-gray-500 text-sm">Admins</p>
-              <h2 className="text-2xl font-bold">{totalAdmin}</h2>
-            </div>
-          </div>
-        </div>
-
-      
-        <div className="bg-white shadow-lg rounded-xl p-5 border">
-          <div className="flex items-center gap-4">
-            <img src={bookIcon} className="w-12" />
-            <div>
-              <p className="text-gray-500 text-sm">Total Books</p>
-              <h2 className="text-2xl font-bold">{totalBooks}</h2>
-            </div>
-          </div>
-        </div>
-
-
-        <div className="bg-white shadow-lg rounded-xl p-5 border">
-          <p className="text-gray-500 text-sm">Borrowed</p>
-          <h2 className="text-2xl font-bold">{totalBorrowedBooks}</h2>
-        </div>
-
- 
-        <div className="bg-white shadow-lg rounded-xl p-5 border bg-red-50">
-          <p className="text-red-500 text-sm">Overdue</p>
-          <h2 className="text-2xl font-bold text-red-600">{overdueCount}</h2>
-        </div>
-      </div>
-
-   
-      <div className="grid lg:grid-cols-2 gap-10 mb-12">
-        <div className="bg-white shadow-xl rounded-xl p-6 border">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">
-            Borrowed vs Returned
-          </h2>
-          <Pie data={pieData} />
-        </div>
-
-        <div className="bg-white shadow-xl rounded-xl p-6 border">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">
-            Monthly Borrow Trend
-          </h2>
-          <Line data={lineChartData} />
-        </div>
-      </div>
-
-      <div className="bg-white shadow-xl rounded-xl p-6 border mb-10">
-        <h2 className="text-xl font-semibold mb-4">Top 5 Most Borrowed Books</h2>
-        {topBooks.map(([title, count], index) => (
-          <p key={index} className="text-gray-700 mb-2">
-            <span className="font-bold">{index + 1}. {title}</span> — {count} borrows
-          </p>
-        ))}
-      </div>
-
-    
-      <div className="bg-white shadow-xl rounded-xl p-6 border">
-        <h2 className="text-xl font-semibold mb-4">Recent Borrow Activity</h2>
-
-        {recentBorrowList.map((item) => (
-          <div
-            key={item._id}
-            className="flex justify-between border-b py-3 last:border-none"
-          >
-            <p className="font-medium">{item.bookTitle}</p>
-            <p className="text-gray-600">{item.userEmail}</p>
-            <p className="text-gray-600">
-              {new Date(item.borrowDate).toLocaleDateString()}
-            </p>
-          </div>
-        ))}
+      <div className="flex items-center gap-4 bg-white/20 backdrop-blur-md p-3 px-5 rounded-xl">
+        <img
+          src={user?.avatar?.url || "/default-avatar.png"}
+          alt="avatar"
+          className="w-12 h-12 rounded-full object-cover border-2 border-white"
+        />
+        <p className="text-lg font-medium">
+          Welcome, <span className="font-bold">{user?.name}</span>
+        </p>
       </div>
     </div>
-  );
+
+    {/* Stats Cards */}
+    <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
+      {[
+        { label: "Users", value: totalUser, icon: usersIcon },
+        { label: "Admins", value: totalAdmin, icon: adminIcon },
+        { label: "Total Books", value: totalBooks, icon: bookIcon },
+      ].map((item, i) => (
+        <div
+          key={i}
+          className="bg-white rounded-2xl p-5 border shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+        >
+          <div className="flex items-center gap-4">
+            <div className="bg-blue-100 p-3 rounded-xl">
+              <img src={item.icon} className="w-8" />
+            </div>
+            <div>
+              <p className="text-gray-500 text-sm">{item.label}</p>
+              <h2 className="text-2xl font-bold">{item.value}</h2>
+            </div>
+          </div>
+        </div>
+      ))}
+
+      <div className="bg-white rounded-2xl p-5 border shadow-md hover:shadow-xl transition">
+        <p className="text-gray-500 text-sm">Borrowed</p>
+        <h2 className="text-3xl font-bold text-indigo-600">
+          {totalBorrowedBooks}
+        </h2>
+      </div>
+
+      <div className="bg-red-50 rounded-2xl p-5 border border-red-200 shadow-md hover:shadow-xl transition">
+        <p className="text-red-500 text-sm">Overdue</p>
+        <h2 className="text-3xl font-bold text-red-600">
+          {overdueCount}
+        </h2>
+      </div>
+    </div>
+
+    {/* Chart */}
+    <div className="max-w-3xl mx-auto">
+      <div className="bg-white rounded-2xl p-6 shadow-lg border hover:shadow-xl transition">
+        <h2 className="text-lg font-semibold text-gray-700 mb-4 text-center">
+          Borrowed vs Returned
+        </h2>
+        <Pie data={pieData} />
+      </div>
+    </div>
+
+  </div>
+);
+
+
 };
 
 export default AdminDashboard;
